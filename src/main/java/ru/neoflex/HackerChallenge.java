@@ -1,13 +1,8 @@
 package ru.neoflex;
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class HackerChallenge {
-    private static final int SEED = new Random().nextInt(50) + 10;
-    private static final int FALSE_A = (SEED * 2 + 13) % 256;
-    private static final int FALSE_B = (SEED * 3 + 7) % 256;
-
     private static final int HIDDEN_A = scrambleNumber(6, 7, 14);
     private static final int HIDDEN_B = scrambleNumber(11, 9, 18);
 
@@ -29,21 +24,15 @@ public class HackerChallenge {
         }
     }
 
-    private static int scrambleNumber(int x, int y, int shift) {
-        int step1 = (x * y) << 1;
-        int step2 = step1 ^ shift;
-        int step3 = step2 % 256;
-        return step3;
+    private static int scrambleNumber(int x, int y, int key) {
+        return ((x * y) + key) * 2;
     }
 
     private static boolean checkNumbers(int a, int b) {
-        return (descrambleNumber(a, 14) == 6 * 7) && (descrambleNumber(b, 18) == 11 * 9);
+        return (descrambleNumber(HIDDEN_A, 14) == a) && (descrambleNumber(HIDDEN_B, 18) == b);
     }
 
-    private static int descrambleNumber(int number, int shift) {
-        int step1 = number % 256;
-        int step2 = step1 ^ shift;
-        int step3 = step2 >> 1;
-        return step3;
+    private static int descrambleNumber(int encoded, int key) {
+        return (encoded / 2) - key;
     }
 }
